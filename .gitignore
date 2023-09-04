@@ -1,3 +1,4 @@
 circle-scores
 build
 *.txt
+.sw?
