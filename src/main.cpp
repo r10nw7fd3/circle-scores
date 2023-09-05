@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
 
 	curl_global_init(CURL_GLOBAL_ALL);
 
-	Processor prc(args.get_delay(), args.get_page(), creds);
+	Processor prc(args, creds);
 	prc.run();
 
 	curl_global_cleanup();

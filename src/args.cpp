@@ -33,6 +33,7 @@ void Args::parse(int argc, char** argv) {
 			std::cout << "-d <delay> Delay in seconds between scans. Default = 300" << std::endl;
 			std::cout << "-p <page>  Leaderboard page to scan. Default = 0" << std::endl;
 			std::cout << "-c <fname> Credentials filename. Default = credentials.txt" << std::endl;
+			std::cout << "-no-dr     Do not post replays to discord" << std::endl;
 			std::exit(0);
 		}
 		if(!std::strcmp(argv[i], "-d")) {
@@ -46,6 +47,9 @@ void Args::parse(int argc, char** argv) {
 		else if(!std::strcmp(argv[i], "-c")) {
 			check_next("-c", i, argc);
 			creds_filename_ = argv[i];
+		}
+		else if(!std::strcmp(argv[i], "-no-dr")) {
+			discord_replays_ = 0;
 		}
 		else {
 			std::cout << "Unknown argument \"" << argv[i] << "\"" << std::endl;
@@ -64,4 +68,8 @@ int Args::get_page() const {
 
 const std::string& Args::get_creds_filename() const {
 	return creds_filename_;
+}
+
+int Args::get_discord_replays() const {
+	return discord_replays_;
 }

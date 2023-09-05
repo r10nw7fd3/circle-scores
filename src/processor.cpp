@@ -10,8 +10,8 @@
 #include "recent_scores.hpp"
 #include "legacy_replay.hpp"
 
-Processor::Processor(int delay, int page, Credentials& creds)
-	: delay_(delay), page_(page), creds_(creds), token_(creds.get_osu_id(), creds.get_osu_key()), discord_(creds.get_discord_hook_url()) {
+Processor::Processor(Args& args, Credentials& creds)
+	: args_(args), creds_(creds), token_(creds.get_osu_id(), creds.get_osu_key()), discord_(creds.get_discord_hook_url()) {
 }
 
 time_t Processor::get_last_update(int id) {
@@ -66,7 +66,8 @@ void Processor::post_discord(const osu::Score& e) {
 	std::cout << msg << std::endl;
 
 	std::string osr;
-	download_replay(e, osr);
+	if(args_.get_discord_replays())
+		download_replay(e, osr);
 
 	long long ret = discord_.post(msg, e.get_cover_url(), osr);
 	if(ret < 0 || ret / 100 != 2)
@@ -83,7 +84,7 @@ void Processor::query() {
 
 	unsigned long long start = get_unix_ms();
 	std::cout << LOGI"Pulling rankings" << std::endl;
-	osu::requests::Rankings rankings(tkn, page_);
+	osu::requests::Rankings rankings(tkn, args_.get_page());
 	std::vector<std::tuple<int, std::string>> lb;
 	ret = rankings.perform(lb);
 	if(ret < 0 || ret / 100 != 2) {
@@ -120,7 +121,7 @@ void Processor::query() {
 int Processor::run() {
 	for(;;) {
 		query();
-		std::this_thread::sleep_for(std::chrono::seconds(delay_));
+		std::this_thread::sleep_for(std::chrono::seconds(args_.get_delay()));
 	}
 	return 0;
 }

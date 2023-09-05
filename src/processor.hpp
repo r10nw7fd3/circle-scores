@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <ctime>
+#include "args.hpp"
 #include "credentials.hpp"
 #include "token.hpp"
 #include "score.hpp"
@@ -9,8 +10,7 @@
 
 class Processor {
 private:
-	int delay_;
-	int page_;
+	Args& args_;
 	Credentials& creds_;
 	osu::requests::Token token_;
 	std::unordered_map<int, time_t> last_update_;
@@ -23,7 +23,7 @@ private:
 	void post_discord(const osu::Score&);
 	void query();
 public:
-	Processor(int, int, Credentials&);
+	Processor(Args&, Credentials&);
 
 	int run();
 };
