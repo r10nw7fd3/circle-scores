@@ -11,7 +11,7 @@ void Credentials::fnotpresentbutnotnes(const std::string& name) {
 	std::cout << LOGW"Field " << name << " does not exist, but is not necessary" << std::endl;
 }
 
-Credentials::Credentials(std::string filename)
+Credentials::Credentials(const std::string& filename)
 	: filename_(filename) {
 }
 

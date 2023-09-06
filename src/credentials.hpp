@@ -13,7 +13,7 @@ private:
 	void fnotpresent(const std::string&);
 	void fnotpresentbutnotnes(const std::string&);
 public:
-	Credentials(std::string);
+	Credentials(const std::string&);
 
 	int read();
 
