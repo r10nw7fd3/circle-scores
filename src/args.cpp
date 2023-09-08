@@ -34,6 +34,7 @@ void Args::parse(int argc, char** argv) {
 			std::cout << "-p <page>  Leaderboard page to scan. Default = 0" << std::endl;
 			std::cout << "-c <fname> Credentials filename. Default = credentials.txt" << std::endl;
 			std::cout << "-no-dr     Do not post replays to discord" << std::endl;
+			std::cout << "-pp <pp>   Lower PP bound. Default = 800" << std::endl;
 			std::exit(0);
 		}
 		if(!std::strcmp(argv[i], "-d")) {
@@ -50,6 +51,10 @@ void Args::parse(int argc, char** argv) {
 		}
 		else if(!std::strcmp(argv[i], "-no-dr")) {
 			discord_replays_ = 0;
+		}
+		else if(!!std::strcmp(argv[i], "-pp")) {
+			check_next("-pp", i, argc);
+			lower_pp_bound_ = read_int(argv[i]);
 		}
 		else {
 			std::cout << "Unknown argument \"" << argv[i] << "\"" << std::endl;
@@ -72,4 +77,8 @@ const std::string& Args::get_creds_filename() const {
 
 int Args::get_discord_replays() const {
 	return discord_replays_;
+}
+
+int Args::get_lower_pp_bound() const {
+	return lower_pp_bound_;
 }

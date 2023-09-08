@@ -108,7 +108,7 @@ void Processor::query() {
 			if(s.get_error())
 				continue;
 
-			if(s.get_time() < get_last_update(std::get<0>(p)) || s.get_pp() < 800)
+			if(s.get_time() < get_last_update(std::get<0>(p)) || s.get_pp() < args_.get_lower_pp_bound())
 				continue;
 
 			post_discord(s);
