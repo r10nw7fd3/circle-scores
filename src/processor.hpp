@@ -26,4 +26,5 @@ public:
 	Processor(Args&, Credentials&);
 
 	int run();
+	const osu::requests::Token& get_token() const;
 };

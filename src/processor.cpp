@@ -2,7 +2,6 @@
 
 #include <thread>
 #include <stdexcept>
-#include <chrono>
 #include <cmath>
 #include <sstream>
 #include "log.hpp"
@@ -124,4 +123,8 @@ int Processor::run() {
 		std::this_thread::sleep_for(std::chrono::seconds(args_.get_delay()));
 	}
 	return 0;
+}
+
+const osu::requests::Token& Processor::get_token() const {
+	return token_;
 }
