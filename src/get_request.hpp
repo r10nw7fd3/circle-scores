@@ -16,7 +16,7 @@ public:
 	~GetRequest();
 
 	void set_endpoint(const std::string&);
-	int add_header(std::string);
+	int add_header(const std::string&);
 	long long perform(std::string&);
 	std::string last_err() const;
 	CURL* get_curl() const;

@@ -37,7 +37,7 @@ void GetRequest::set_endpoint(const std::string& endpoint) {
 	curl_easy_setopt(curl_, CURLOPT_URL, &endpoint[0]);
 }
 
-int GetRequest::add_header(std::string header) {
+int GetRequest::add_header(const std::string& header) {
 	struct curl_slist* tmp = curl_slist_append(curl_headers_, &header[0]);
 	if(!tmp)
 		return 1;
