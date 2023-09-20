@@ -1,7 +1,7 @@
 #include "token.hpp"
-#include <iostream>
 #include "json.hpp"
 #include "log.hpp"
+#include "prefix.hpp"
 
 #define TOKENGENFAILED "Failed to generate osu! token: "
 
@@ -38,5 +38,16 @@ namespace osu::requests {
 		expire_ = time(nullptr) + doc["expires_in"].GetInt();
 		std::cout << LOGI"New token: " << token_ << std::endl;
 		return 0;
+	}
+
+	int Token::revoke() {
+		std::cout << LOGI"Deleting token, ret = ";
+		GetRequest req(OSUAPI_PREFIX"oauth/tokens/current");
+		curl_easy_setopt(req.get_curl(), CURLOPT_CUSTOMREQUEST, "DELETE");
+		req.add_header("Authorization: Bearer " + token_);
+		std::string _;
+		long long ret = req.perform(_);
+		std::cout << ret << std::endl;
+		return (ret < 0 || ret / 100 != 2);
 	}
 }

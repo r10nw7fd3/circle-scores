@@ -16,5 +16,6 @@ namespace osu::requests {
 		Token(const std::string&, const std::string&);
 
 		const std::string& get_token();
+		int revoke();
 	};
 }
