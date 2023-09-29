@@ -1,3 +1,5 @@
 #pragma once
 
-int register_handler(void (*)(int));
+#include <functional>
+
+int register_handler(const std::function<void(int)>&);

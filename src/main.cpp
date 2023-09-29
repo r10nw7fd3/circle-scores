@@ -5,16 +5,6 @@
 #include "processor.hpp"
 #include "sig_handler.hpp"
 
-static Processor* prc = nullptr;
-
-static void handler(int sig) {
-	(void) sig;
-
-	if(prc)
-		prc->get_token().revoke();
-	std::exit(0);
-}
-
 int main(int argc, char** argv) {
 	Args args;
 	args.parse(argc, argv);
@@ -24,14 +14,17 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
-	if(args.get_catch_sig())
-		register_handler(handler);
-
 	curl_global_init(CURL_GLOBAL_ALL);
 
-	prc = new Processor(args, creds);
-	prc->run();
-	delete prc;
+	Processor prc(args, creds);
+	if(args.get_catch_sig())
+		register_handler([&prc] (int code) {
+			(void) code;
+			prc.get_token().revoke();
+			std::exit(0);
+		});
+
+	prc.run();
 
 	curl_global_cleanup();
 	return 0;
