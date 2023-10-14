@@ -10,8 +10,8 @@ private:
 	std::string osu_legacy_key_;
 	std::string discord_hook_url_;
 
-	void fnotpresent(const std::string&);
-	void fnotpresentbutnotnes(const std::string&);
+	static void fnotpresent(const std::string&);
+	static void fnotpresentbutnotnes(const std::string&);
 public:
 	Credentials(const std::string&);
 

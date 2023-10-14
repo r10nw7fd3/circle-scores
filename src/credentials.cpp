@@ -3,10 +3,10 @@
 #include <fstream>
 #include "log.hpp"
 
-// Our read() method kind of depends on these, would it be a good idea to make them static member functions? I don't know!
 void Credentials::fnotpresent(const std::string& name) {
 	std::cout << LOGE"Field " << name << " does not exist" << std::endl;
 }
+
 void Credentials::fnotpresentbutnotnes(const std::string& name) {
 	std::cout << LOGW"Field " << name << " does not exist, but is not necessary" << std::endl;
 }
