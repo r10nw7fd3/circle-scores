@@ -1,7 +1,8 @@
 #include "credentials.hpp"
-#include <iostream>
 #include <fstream>
+#include <sstream>
 #include "log.hpp"
+#include "json.hpp"
 
 void Credentials::fnotpresent(const std::string& name) {
 	std::cout << LOGE"Field " << name << " does not exist" << std::endl;
@@ -22,21 +23,32 @@ int Credentials::read() {
 		std::cout << LOGE"Failed to open " << filename_ << std::endl;
 		return 1;
 	}
-
-	if(!getline(ifs, osu_id_)) {
-		fnotpresent("osu_id");
-		return 1;
-	}
-	if(!getline(ifs, osu_key_)) {
-		fnotpresent("osu_key");
-		return 1;
-	}
-	if(!getline(ifs, osu_legacy_key_))
-		fnotpresentbutnotnes("osu_legacy_key");
-	if(!getline(ifs, discord_hook_url_))
-		fnotpresentbutnotnes("discord_hook_url");
-
+	std::stringstream sstream;
+	sstream << ifs.rdbuf();
+	std::string json_str = sstream.str();
 	ifs.close();
+
+	rapidjson::Document json;
+	json.Parse(&json_str[0]);
+
+	JSON_VALIDATE(json, "osu_id", { fnotpresent("osu_id"); return 1; }, Int)
+	osu_id_ = std::to_string(json["osu_id"].GetInt());
+	JSON_VALIDATE(json, "osu_key", { fnotpresent("osu_key"); return 1; }, String)
+	osu_key_ = json["osu_key"].GetString();
+
+	JSON_VALIDATE_SUCCESS(json, "osu_legacy_key", {
+		fnotpresentbutnotnes("osu_legacy_key");
+		std::cout << LOGW"Replay-related functionality will be unavailable" << std::endl;
+	}, {
+		osu_legacy_key_ = json["osu_legacy_key"].GetString();
+	}, String)
+
+	JSON_VALIDATE_SUCCESS(json, "discord_hook_url", {
+		fnotpresentbutnotnes("discord_hook_url");
+	}, {
+		discord_hook_url_ = json["discord_hook_url"].GetString();
+	}, String)
+
 	return 0;
 }
 

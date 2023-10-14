@@ -6,7 +6,7 @@ class Args {
 private:
 	int delay_ = 300; // 5 mins
 	int page_ = 0;
-	std::string creds_filename_ = "credentials.txt";
+	std::string creds_filename_ = "credentials.json";
 	int discord_replays_ = 1;
 	int lower_pp_bound_ = 800;
 	int catch_sig_ = 1;

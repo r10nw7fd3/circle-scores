@@ -32,8 +32,8 @@ void Args::parse(int argc, char** argv) {
 			std::cout << "-h         Display help message" << std::endl;
 			std::cout << "-d <delay> Delay in seconds between scans. Default = 300" << std::endl;
 			std::cout << "-p <page>  Leaderboard page to scan. Default = 0" << std::endl;
-			std::cout << "-c <fname> Credentials filename. Default = credentials.txt" << std::endl;
-			std::cout << "-no-dr     Do not post replays to discord" << std::endl;
+			std::cout << "-c <fname> Credentials filename. Default = credentials.json" << std::endl;
+			std::cout << "-no-dr     Do not download and post replays to discord" << std::endl;
 			std::cout << "-pp <pp>   Lower PP bound. Default = 800" << std::endl;
 			std::cout << "-no-sig    Do not catch Ctrl+C/SIGINT/SIGTERM to revoke token" << std::endl;
 			std::exit(0);

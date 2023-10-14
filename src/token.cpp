@@ -30,7 +30,7 @@ namespace osu::requests {
 		rapidjson::Document doc;
 		doc.Parse(&data[0]);
 		if(!doc.HasMember("access_token")) {
-			std::cout << LOGE TOKENGENFAILED"Malformed JSON" << std::endl;
+			std::cout << LOGE TOKENGENFAILED"No access_token field" << std::endl;
 			std::cout << LOGI"Response: " << data << std::endl;
 			return 1;
 		}

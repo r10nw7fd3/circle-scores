@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
 	args.parse(argc, argv);
 	Credentials creds(args.get_creds_filename());
 	if(creds.read()) {
-		std::cout << "Failed to open credentials file" << std::endl;
+		std::cout << "Failed to read credentials file" << std::endl;
 		return 1;
 	}
 

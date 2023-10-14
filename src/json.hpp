@@ -7,3 +7,9 @@
 	if(!parent.HasMember(member) || !parent[member].Is##type()) { \
 		onerr \
 	}
+
+#define JSON_VALIDATE_SUCCESS(parent, member, onerr, onsuccess, type) \
+	JSON_VALIDATE(parent, member, onerr, type) \
+	else { \
+		onsuccess \
+	}
