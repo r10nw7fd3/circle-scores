@@ -65,7 +65,7 @@ void Processor::post_discord(const osu::Score& e) {
 	std::cout << msg << std::endl;
 
 	std::string osr;
-	if(args_.get_discord_replays())
+	if(args_.get_discord_replays() && !creds_.get_discord_hook_url().empty() && !creds_.get_osu_legacy_key().empty())
 		download_replay(e, osr);
 
 	long long ret = discord_.post(msg, e.get_cover_url(), osr);
