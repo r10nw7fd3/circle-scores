@@ -4,10 +4,9 @@
 
 class PostRequest: public GetRequest {
 public:
-	PostRequest(const std::string&, std::string&, size_t);
-	PostRequest(const std::string&, std::string&);
+	PostRequest(const std::string&, std::string&, size_t = 0);
 	PostRequest(const std::string&);
-	PostRequest();
+	PostRequest() = default;
 
 	void set_postdata(std::string&);
 	void set_postdata(std::string&, size_t);

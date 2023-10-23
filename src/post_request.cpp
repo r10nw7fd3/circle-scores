@@ -5,16 +5,8 @@ PostRequest::PostRequest(const std::string& endpoint, std::string& postdata, siz
 	set_postdata(postdata, size);
 }
 
-PostRequest::PostRequest(const std::string& endpoint, std::string& postdata)
-	: PostRequest(endpoint, postdata, postdata.size()) {
-}
-
 PostRequest::PostRequest(const std::string& endpoint)
 	: GetRequest(endpoint) {
-}
-
-PostRequest::PostRequest()
-	: GetRequest() {
 }
 
 void PostRequest::set_postdata(std::string& postdata) {
