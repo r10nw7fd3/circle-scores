@@ -41,6 +41,9 @@ namespace osu::requests {
 	}
 
 	int Token::revoke() const {
+		if(token_.empty())
+			return 0;
+
 		std::cout << LOGI"Revoking token, ret = ";
 		std::flush(std::cout);
 		GetRequest req(OSUAPI_PREFIX"oauth/tokens/current");
