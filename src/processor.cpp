@@ -39,7 +39,7 @@ void Processor::to_text(const osu::Score& e, std::string& ret) {
 	ret.append(e.get_artist()).append(" - ").append(e.get_song()).append(" [").append(e.get_diff()).append("] ");
 	ret += acc.append("% +").append(e.get_mods().empty() ? "NM" : e.get_mods());
 	ret += " ";
-	ret += (e.get_misses() ? std::to_string(e.get_misses()).append("miss ") : "FC? ");
+	ret += (e.get_misses() ? std::to_string(e.get_misses()).append("miss ") : e.get_acc() == 100.0 ? "FC " : "FC? ");
 	ret += std::to_string(e.get_pp());
 	ret += "pp ";
 	ret += e.get_score_url();
