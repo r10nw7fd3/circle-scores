@@ -1,12 +1,13 @@
 #include "post_request.hpp"
 
 PostRequest::PostRequest(const std::string& endpoint, std::string& postdata, size_t size)
-	: GetRequest(endpoint) {
+	: BaseRequest(endpoint) {
 	set_postdata(postdata, size);
 }
 
-PostRequest::PostRequest(const std::string& endpoint)
-	: GetRequest(endpoint) {
+void PostRequest::init() {
+	BaseRequest::init();
+	curl_easy_setopt(curl_, CURLOPT_CUSTOMREQUEST, "POST");
 }
 
 void PostRequest::set_postdata(std::string& postdata) {

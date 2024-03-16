@@ -46,7 +46,7 @@ namespace osu::requests {
 
 		std::cout << LOGI"Revoking token, ret = ";
 		std::flush(std::cout);
-		GetRequest req(OSUAPI_PREFIX"oauth/tokens/current");
+		BaseRequest req(OSUAPI_PREFIX"oauth/tokens/current");
 		curl_easy_setopt(req.get_curl(), CURLOPT_CUSTOMREQUEST, "DELETE");
 		req.add_header("Authorization: Bearer " + token_);
 		std::string _;

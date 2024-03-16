@@ -1,6 +1,7 @@
 #pragma once
 
 #include "post_request.hpp"
+#include "get_request.hpp"
 
 class DiscordHook {
 private:
