@@ -10,8 +10,8 @@
 
 class Processor {
 private:
-	Args& args_;
-	Credentials& creds_;
+	const Args& args_;
+	const Credentials& creds_;
 	osu::requests::Token token_;
 	std::unordered_map<int, time_t> last_update_;
 	DiscordHook discord_;
@@ -23,7 +23,7 @@ private:
 	void post_discord(const osu::Score&);
 	void query();
 public:
-	Processor(Args&, Credentials&);
+	Processor(const Args&, const Credentials&);
 
 	int run();
 	const osu::requests::Token& get_token() const;

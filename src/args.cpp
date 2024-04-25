@@ -29,13 +29,14 @@ void Args::parse(int argc, char** argv) {
 		if(!std::strcmp(argv[i], "-h") || !std::strcmp(argv[i], "-help") || !std::strcmp(argv[i], "--help")) {
 			std::cout << "Usage: " << argv[0] << " [args]" << std::endl << std::endl;
 			std::cout << "Args:" << std::endl;
-			std::cout << "-h         Display help message" << std::endl;
-			std::cout << "-d <delay> Delay in seconds between scans. Default = 300" << std::endl;
-			std::cout << "-p <page>  Leaderboard page to scan. Default = 0" << std::endl;
-			std::cout << "-c <fname> Credentials filename. Default = credentials.json" << std::endl;
-			std::cout << "-no-dr     Do not download and post replays to discord" << std::endl;
-			std::cout << "-pp <pp>   Lower PP bound. Default = 800" << std::endl;
-			std::cout << "-no-sig    Do not catch Ctrl+C/SIGINT/SIGTERM to revoke token" << std::endl;
+			std::cout << "-h          Display help message" << std::endl;
+			std::cout << "-d <delay>  Delay in seconds between scans. Default = 300" << std::endl;
+			std::cout << "-p <page>   Leaderboard page to scan. Default = 0" << std::endl;
+			std::cout << "-c <fname>  Credentials filename. Default = credentials.json" << std::endl;
+			std::cout << "-no-dr      Do not download and post replays to discord" << std::endl;
+			std::cout << "-pp <pp>    Lower PP bound. Default = 800" << std::endl;
+			std::cout << "-no-sig     Do not catch Ctrl+C/SIGINT/SIGTERM to revoke token" << std::endl;
+			std::cout << "-tf <fname> Save token to a file" << std::endl;
 			std::exit(0);
 		}
 		if(!std::strcmp(argv[i], "-d")) {
@@ -59,6 +60,10 @@ void Args::parse(int argc, char** argv) {
 		}
 		else if(!std::strcmp(argv[i], "-no-sig")) {
 			catch_sig_ = 0;
+		}
+		else if(!std::strcmp(argv[i], "-tf")) {
+			check_next("-tf", i, argc);
+			token_filename_ = argv[i];
 		}
 		else {
 			std::cout << "Unknown argument \"" << argv[i] << "\"" << std::endl;
@@ -89,4 +94,8 @@ int Args::get_lower_pp_bound() const {
 
 int Args::get_catch_sig() const {
 	return catch_sig_;
+}
+
+const std::string& Args::get_token_filename() const {
+	return token_filename_;
 }

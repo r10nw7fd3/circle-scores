@@ -9,8 +9,10 @@
 #include "recent_scores.hpp"
 #include "legacy_replay.hpp"
 
-Processor::Processor(Args& args, Credentials& creds)
-	: args_(args), creds_(creds), token_(creds.get_osu_id(), creds.get_osu_key()), discord_(creds.get_discord_hook_url()) {
+Processor::Processor(const Args& args, const Credentials& creds)
+	: args_(args), creds_(creds),
+	token_(creds.get_osu_id(), creds.get_osu_key(), args.get_token_filename()),
+	discord_(creds.get_discord_hook_url()) {
 }
 
 time_t Processor::get_last_update(int id) {

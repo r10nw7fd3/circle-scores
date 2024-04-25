@@ -2,12 +2,15 @@
 #include "json.hpp"
 #include "log.hpp"
 #include "prefix.hpp"
+#include <fstream>
 
 #define TOKENGENFAILED "Failed to generate osu! token: "
 
 namespace osu::requests {
-	Token::Token(const std::string& id, const std::string& key)
-		: postfields_("client_id=" + id + "&client_secret=" + key + "&grant_type=client_credentials&scope=public"), req_("https://osu.ppy.sh/oauth/token") {
+	Token::Token(const std::string& id, const std::string& key, const std::string& token_filename)
+		: postfields_("client_id=" + id + "&client_secret=" + key + "&grant_type=client_credentials&scope=public"),
+		req_("https://osu.ppy.sh/oauth/token"),
+		token_filename_(token_filename) {
 		req_.set_postdata(postfields_);
 	}
  
@@ -37,6 +40,12 @@ namespace osu::requests {
 		token_ = doc["access_token"].GetString();
 		expire_ = time(nullptr) + doc["expires_in"].GetInt();
 		std::cout << LOGI"New token: " << token_ << std::endl;
+
+		if(!token_filename_.empty()) {
+			std::ofstream ofs(token_filename_);
+			ofs << token_;
+		}
+
 		return 0;
 	}
 
