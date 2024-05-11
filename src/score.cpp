@@ -183,7 +183,7 @@ namespace osu {
 		char tmp_buf[TMP_BUF_SIZE];
 		int8_t tmp_i8 = 0;
 		int32_t tmp_i32 = 20230727;
-		uint64_t long tmp_i64;
+		uint64_t tmp_i64;
 		char md5pref[2] = { 11, 32 };
 
 		// Mode
