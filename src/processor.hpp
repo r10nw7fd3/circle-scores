@@ -12,19 +12,19 @@ class Processor {
 private:
 	const Args& args_;
 	const Credentials& creds_;
-	osu::requests::Token token_;
+	Token token_;
 	std::unordered_map<int, time_t> last_update_;
 	DiscordHook discord_;
 
-	static void to_text(const osu::Score&, std::string&);
+	static void to_text(const Score&, std::string&);
 	time_t get_last_update(int);
 	time_t set_last_update(int);
-	void download_replay(const osu::Score&, std::string&);
-	void post_discord(const osu::Score&);
+	void download_replay(const Score&, std::string&);
+	void post_discord(const Score&);
 	void query();
 public:
 	Processor(const Args&, const Credentials&);
 
 	int run();
-	const osu::requests::Token& get_token() const;
+	const Token& get_token() const;
 };

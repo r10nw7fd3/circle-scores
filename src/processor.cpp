@@ -28,7 +28,7 @@ time_t Processor::set_last_update(int id) {
 	return last_update_[id] = time(nullptr);	
 }
 
-void Processor::to_text(const osu::Score& e, std::string& ret) {
+void Processor::to_text(const Score& e, std::string& ret) {
 	std::string country = std::string(":flag_").append(e.get_country()).append(":");
 	for(char& c : country)
 		c = std::tolower(c);
@@ -47,8 +47,8 @@ void Processor::to_text(const osu::Score& e, std::string& ret) {
 	ret += e.get_score_url();
 }
 
-void Processor::download_replay(const osu::Score& e, std::string& ret) {
-	osu::requests::LegacyReplay lr(creds_.get_osu_legacy_key(), e.get_score_id());
+void Processor::download_replay(const Score& e, std::string& ret) {
+	LegacyReplay lr(creds_.get_osu_legacy_key(), e.get_score_id());
 	std::string replay_lzma;
 	long long lr_ret = lr.perform(replay_lzma);
 	std::cout << LOGI"LegacyReplay code: " << lr_ret << std::endl;
@@ -61,7 +61,7 @@ void Processor::download_replay(const osu::Score& e, std::string& ret) {
 	}
 }
 
-void Processor::post_discord(const osu::Score& e) {
+void Processor::post_discord(const Score& e) {
 	std::string msg;
 	to_text(e, msg);
 	std::cout << msg << std::endl;
@@ -85,7 +85,7 @@ void Processor::query() {
 
 	unsigned long long start = get_unix_ms();
 	std::cout << LOGI"Pulling rankings" << std::endl;
-	osu::requests::Rankings rankings(tkn, args_.get_page());
+	Rankings rankings(tkn, args_.get_page());
 	std::vector<std::tuple<int, std::string>> lb;
 	ret = rankings.perform(lb);
 	if(ret < 0 || ret / 100 != 2) {
@@ -95,15 +95,15 @@ void Processor::query() {
 
 	for(const auto& p : lb) {
 		std::cout << LOGI"Pulling scores for " << std::get<1>(p) << std::endl;
-		osu::requests::RecentScores rs(tkn, std::get<0>(p));
-		std::vector<osu::Score> scores;
+		RecentScores rs(tkn, std::get<0>(p));
+		std::vector<Score> scores;
 		ret = rs.perform(scores);
 		if(ret < 0 || ret / 100 != 2) {
 			std::cout << LOGE"Failed to pull scores, ret = " << ret << std::endl;
 			continue;
 		}
 
-		for(const osu::Score& s : scores) {
+		for(const Score& s : scores) {
 			// RecentScores class only warns us about errors in score,
 			// let's skip failed scores manually
 			if(s.get_error())
@@ -127,6 +127,6 @@ int Processor::run() {
 	return 0;
 }
 
-const osu::requests::Token& Processor::get_token() const {
+const Token& Processor::get_token() const {
 	return token_;
 }

@@ -3,8 +3,6 @@
 #include <ctime>
 #include "post_request.hpp"
 
-namespace osu::requests {
-
 class Token {
 private:
 	time_t expire_ = 0;
@@ -20,5 +18,3 @@ public:
 	const std::string& get_token();
 	int revoke() const;
 };
-
-}
