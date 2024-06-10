@@ -1,7 +1,6 @@
 #include "score.hpp"
 #include "uleb128.hpp"
 #include "log.hpp"
-#include <fstream>
 #include <cstdint>
 #include <unordered_map>
 #include <cmath>
@@ -170,70 +169,4 @@ int Score::encode_mods(int& dest) const {
 			dest |= modmap.at("SD");
 	}
 	return 0;
-}
-
-// TODO: Rewrite this with a custom ofstream class
-// Danser is very loyal to the data it receives, which makes
-// it easy to construct minimal replay file without getting a lot of values from api
-// and computing anything ourselves
-int Score::write_dummy_replay(std::ostream& fs, const std::string& replay_data) const {
-#define TMP_BUF_SIZE 80
-	char tmp_buf[TMP_BUF_SIZE];
-	int8_t tmp_i8 = 0;
-	int32_t tmp_i32 = 20230727;
-	uint64_t tmp_i64;
-	char md5pref[2] = { 11, 32 };
-
-	// Mode
-	fs.write(reinterpret_cast<const char*>(&tmp_i8), 1);
-	// Version
-	fs.write(reinterpret_cast<const char*>(&tmp_i32), 4);
-
-	// Beatmap md5
-	fs.write(md5pref, 2);
-	fs.write(&map_md5_[0], md5pref[1]);
-
-	// Player name
-	size_t nbytes = uleb128_encode(player_.size(), tmp_buf, TMP_BUF_SIZE);
-	if(!nbytes)
-		return 1;
-	// Player name: identifier
-	fs.write(md5pref, 1);
-	// Player name: uleb
-	fs.write(tmp_buf, nbytes);
-	// Player name: name
-	fs.write(&player_[0], player_.size());
-
-	// Replay md5 (empty)
-	fs.write(reinterpret_cast<const char*>(&tmp_i8), 1);
-
-	// 300, 100, 50, geki, katu, misses, score, max combo, pc
-	// It doesn't matter what's going to be in those values, so we won't even 0 init them
-	fs.write(tmp_buf, 19);
-
-	// Mods
-	if(encode_mods(tmp_i32))
-		return 1;
-	fs.write(reinterpret_cast<const char*>(&tmp_i32), 4);
-
-	// HP bar (empty)
-	fs.write(reinterpret_cast<const char*>(&tmp_i8), 1);
-
-	// Time
-	tmp_i64 = unix_to_winticks(time_);
-	fs.write(reinterpret_cast<const char*>(&tmp_i64), sizeof(time_t));
-
-	// Replay data size
-	tmp_i32 = replay_data.size();
-	fs.write(reinterpret_cast<const char*>(&tmp_i32), 4);
-	// Replay data
-	fs.write(&replay_data[0], replay_data.size());
-
-	// Online score id. Generally not needed, but i suppose		
-	// it's going to be used for a leaderboard in danser
-	fs.write(reinterpret_cast<const char*>(&score_id_), 8);
-
-	fs.flush();
-
-	return !fs.good();
 }

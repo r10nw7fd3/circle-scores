@@ -10,5 +10,5 @@ private:
 	GetRequest get_;
 public:
 	DiscordHook(const std::string&);
-	long long post(const std::string&, const std::string&, const std::string&);
+	long long post(const std::string&, const std::string&);
 };

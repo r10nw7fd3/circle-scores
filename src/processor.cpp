@@ -7,7 +7,6 @@
 #include "log.hpp"
 #include "rankings.hpp"
 #include "recent_scores.hpp"
-#include "legacy_replay.hpp"
 
 Processor::Processor(const Args& args, const Credentials& creds)
 	: args_(args), creds_(creds),
@@ -47,30 +46,15 @@ void Processor::to_text(const Score& e, std::string& ret) {
 	ret += e.get_score_url();
 }
 
-void Processor::download_replay(const Score& e, std::string& ret) {
-	LegacyReplay lr(creds_.get_osu_legacy_key(), e.get_score_id());
-	std::string replay_lzma;
-	long long lr_ret = lr.perform(replay_lzma);
-	std::cout << LOGI"LegacyReplay code: " << lr_ret << std::endl;
-	if(lr_ret >= 0 || lr_ret / 100 == 2) {
-		std::ostringstream ss;
-		if(!e.write_dummy_replay(ss, replay_lzma))
-			ret = ss.str();
-		else
-			std::cout << LOGE"write_dummy_replay() failed" << std::endl;
-	}
-}
-
 void Processor::post_discord(const Score& e) {
 	std::string msg;
 	to_text(e, msg);
 	std::cout << msg << std::endl;
 
-	std::string osr;
-	if(args_.get_discord_replays() && !creds_.get_discord_hook_url().empty() && !creds_.get_osu_legacy_key().empty())
-		download_replay(e, osr);
+	if(creds_.get_discord_hook_url().empty())
+		return;
 
-	long long ret = discord_.post(msg, e.get_cover_url(), osr);
+	long long ret = discord_.post(msg, e.get_cover_url());
 	if(ret < 0 || ret / 100 != 2)
 		std::cout << LOGE"Failed to post score to discord, ret = " << ret << std::endl;
 }

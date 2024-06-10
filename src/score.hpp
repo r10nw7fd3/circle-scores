@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <iostream>
 #include "json.hpp"
 #include "time.hpp"
 
@@ -45,6 +44,4 @@ public:
 
 	std::string get_score_url() const;
 	std::string get_cover_url() const;
-
-	int write_dummy_replay(std::ostream&, const std::string&) const;
 };

@@ -5,7 +5,7 @@ DiscordHook::DiscordHook(const std::string& url)
 	: url_(url), post_(url) {
 }
 
-long long DiscordHook::post(const std::string& data, const std::string& cover_url, const std::string& osr) {
+long long DiscordHook::post(const std::string& data, const std::string& cover_url) {
 	get_.set_endpoint(cover_url);
 	std::string cover_data;
 	long long ret = get_.perform(cover_data);
@@ -18,26 +18,14 @@ long long DiscordHook::post(const std::string& data, const std::string& cover_ur
 	std::string payload = "{ \"content\": \"";
 	payload += data;
 	payload += "\"";
-	if(!osr.empty() || !cover_data.empty()) {
+	if(!cover_data.empty()) {
 		payload += ", \"attachments\": [";
-		if(!osr.empty()) {
-			payload += "{ \"id\": 0 }";
-			field = curl_mime_addpart(form);
-			curl_mime_name(field, "files[0]");
-			curl_mime_data(field, &osr[0], osr.size());
-			curl_mime_filename(field, "replay.osr");
-		}
-		if(!cover_data.empty()) {
-			if(!osr.empty())
-				payload += ", ";
-
-			payload += "{ \"id\": 1 }";
-			field = curl_mime_addpart(form);
-			curl_mime_name(field, "files[1]");
-			curl_mime_data(field, &cover_data[0], cover_data.size());
-			curl_mime_filename(field, "cover.jpg");
-			curl_mime_type(field, "image/jpeg");
-		}
+		payload += "{ \"id\": 0 }";
+		field = curl_mime_addpart(form);
+		curl_mime_name(field, "files[0]");
+		curl_mime_data(field, &cover_data[0], cover_data.size());
+		curl_mime_filename(field, "cover.jpg");
+		curl_mime_type(field, "image/jpeg");
 		payload += "]";
 	}
 	payload += "}";

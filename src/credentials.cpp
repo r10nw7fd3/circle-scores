@@ -36,13 +36,6 @@ int Credentials::read() {
 	JSON_VALIDATE(json, "osu_key", { fnotpresent("osu_key"); return 1; }, String)
 	osu_key_ = json["osu_key"].GetString();
 
-	JSON_VALIDATE_SUCCESS(json, "osu_legacy_key", {
-		fnotpresentbutnotnes("osu_legacy_key");
-		std::cout << LOGW"Replay-related functionality will be unavailable" << std::endl;
-	}, {
-		osu_legacy_key_ = json["osu_legacy_key"].GetString();
-	}, String)
-
 	JSON_VALIDATE_SUCCESS(json, "discord_hook_url", {
 		fnotpresentbutnotnes("discord_hook_url");
 	}, {
@@ -62,10 +55,6 @@ const std::string& Credentials::get_osu_id() const {
 
 const std::string& Credentials::get_osu_key() const {
 	return osu_key_;
-}
-
-const std::string& Credentials::get_osu_legacy_key() const {
-	return osu_legacy_key_;
 }
 
 const std::string& Credentials::get_discord_hook_url() const {
