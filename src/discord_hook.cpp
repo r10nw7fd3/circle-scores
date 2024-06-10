@@ -56,6 +56,7 @@ long long DiscordHook::post(const std::string& data, const std::string& cover_ur
 	ret = post_.perform(response);
 	std::cout << LOGI"Discord response: " << response << std::endl;
 	std::cout << LOGI"Discord response code: " << ret << std::endl;
+	curl_mime_free(form);
 
 	return ret;
 }
