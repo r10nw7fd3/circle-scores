@@ -80,7 +80,31 @@ Score::Score(const rapidjson::Value& json) {
 
 }
 
-Score::Score() {}
+std::string Score::format(bool for_discord) const {
+	std::string country;
+	if(for_discord) {
+		country = std::string(":flag_").append(country_).append(":");
+		for(char& c : country)
+			c = std::tolower(c);
+	}
+	else
+		country = country_;
+
+	std::string acc = std::to_string(std::round(acc_ / 0.01) * 0.01);
+	for(int i = 0; i < 4 && !acc.empty(); ++i)
+			acc.pop_back();
+
+	std::string ret = country.append(" ").append(player_);
+	ret += " | ";
+	ret.append(artist_).append(" - ").append(song_).append(" [").append(diff_).append("] ");
+	ret += acc.append("% +").append(mods_.empty() ? "NM" : mods_);
+	ret += " ";
+	ret += (misses_ ? std::to_string(misses_).append("miss ") : acc_ == 100.0 ? "FC " : "FC? ");
+	ret += std::to_string(pp_);
+	ret += "pp ";
+	ret += get_score_url();
+	return ret;
+}
 
 int Score::get_error() const {
 	return error_;

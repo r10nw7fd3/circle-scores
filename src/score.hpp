@@ -24,7 +24,9 @@ private:
 	time_t time_;
 public:
 	Score(const rapidjson::Value&);
-	Score();
+	Score() = default;
+
+	std::string format(bool for_discord = false) const;
 
 	int get_error() const;
 	const std::string& get_country() const;

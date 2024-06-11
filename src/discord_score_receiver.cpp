@@ -1,19 +1,21 @@
-#include "discord_hook.hpp"
+#include "discord_score_receiver.hpp"
 #include "log.hpp"
 
-DiscordHook::DiscordHook(const std::string& url)
+DiscordScoreReceiver::DiscordScoreReceiver(const std::string& url)
 	: url_(url), post_(url, "") {
 }
 
-long long DiscordHook::post(const std::string& data, const std::string& cover_url) {
-	get_.set_endpoint(cover_url);
+void DiscordScoreReceiver::on_score(const Score& score) {
+	std::string text = score.format(true);
+
+	get_.set_endpoint(score.get_cover_url());
 	std::string cover_data;
 	long long ret = get_.perform(cover_data);
 	if(ret < 0 || ret / 100 != 2)
 		std::cout << LOGE"Failed to download cover, ret = " << ret << std::endl;
 
 	std::string payload = "{ \"content\": \"";
-	payload += data;
+	payload += text;
 	payload += "\"";
 	if(!cover_data.empty()) {
 		payload += ", \"attachments\": [";
@@ -32,6 +34,4 @@ long long DiscordHook::post(const std::string& data, const std::string& cover_ur
 	std::cout << LOGI"Discord response code: " << ret << std::endl;
 
 	post_.clear_mime();
-
-	return ret;
 }

@@ -4,6 +4,8 @@
 #include "credentials.hpp"
 #include "processor.hpp"
 #include "sig_handler.hpp"
+#include "discord_score_receiver.hpp"
+#include "stdout_score_receiver.hpp"
 
 int main(int argc, char** argv) {
 	Args args;
@@ -17,6 +19,15 @@ int main(int argc, char** argv) {
 	curl_global_init(CURL_GLOBAL_ALL);
 
 	Processor prc(args, creds);
+
+	StdoutScoreReceiver stdout_recvr;
+	prc.register_receiver(stdout_recvr);
+
+	if(!creds.get_discord_hook_url().empty()) {
+		DiscordScoreReceiver hook(creds.get_discord_hook_url());
+		prc.register_receiver(hook);
+	}
+
 	if(args.get_catch_sig())
 		register_handler([&prc] (int code) {
 			(void) code;

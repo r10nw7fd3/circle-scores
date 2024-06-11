@@ -10,8 +10,7 @@
 
 Processor::Processor(const Args& args, const Credentials& creds)
 	: args_(args), creds_(creds),
-	token_(creds.get_osu_id(), creds.get_osu_key(), args.get_token_filename()),
-	discord_(creds.get_discord_hook_url()) {
+	token_(creds.get_osu_id(), creds.get_osu_key(), args.get_token_filename()) {
 }
 
 time_t Processor::get_last_update(int id) {
@@ -27,36 +26,10 @@ time_t Processor::set_last_update(int id) {
 	return last_update_[id] = time(nullptr);	
 }
 
-void Processor::to_text(const Score& e, std::string& ret) {
-	std::string country = std::string(":flag_").append(e.get_country()).append(":");
-	for(char& c : country)
-		c = std::tolower(c);
-	std::string acc = std::to_string(std::round(e.get_acc() / 0.01) * 0.01);
-	for(int i = 0; i < 4 && !acc.empty(); ++i)
-			acc.pop_back();
-
-	ret.append(country).append(" ").append(e.get_player());
-	ret += " | ";
-	ret.append(e.get_artist()).append(" - ").append(e.get_song()).append(" [").append(e.get_diff()).append("] ");
-	ret += acc.append("% +").append(e.get_mods().empty() ? "NM" : e.get_mods());
-	ret += " ";
-	ret += (e.get_misses() ? std::to_string(e.get_misses()).append("miss ") : e.get_acc() == 100.0 ? "FC " : "FC? ");
-	ret += std::to_string(e.get_pp());
-	ret += "pp ";
-	ret += e.get_score_url();
-}
-
-void Processor::post_discord(const Score& e) {
-	std::string msg;
-	to_text(e, msg);
-	std::cout << msg << std::endl;
-
-	if(creds_.get_discord_hook_url().empty())
-		return;
-
-	long long ret = discord_.post(msg, e.get_cover_url());
-	if(ret < 0 || ret / 100 != 2)
-		std::cout << LOGE"Failed to post score to discord, ret = " << ret << std::endl;
+void Processor::handle_score(const Score& score) {
+	for(auto* val : receivers_) {
+		val->on_score(score);
+	}
 }
 
 // TODO: Do not needlessly reconstruct objects
@@ -96,7 +69,7 @@ void Processor::query() {
 			if(s.get_time() < get_last_update(std::get<0>(p)) || s.get_pp() < args_.get_lower_pp_bound())
 				continue;
 
-			post_discord(s);
+			handle_score(s);
 		}
 		set_last_update(std::get<0>(p));;
 	}
@@ -109,6 +82,10 @@ int Processor::run() {
 		std::this_thread::sleep_for(std::chrono::seconds(args_.get_delay()));
 	}
 	return 0;
+}
+
+void Processor::register_receiver(ScoreReceiver& recvr) {
+	receivers_.push_back(&recvr);
 }
 
 const Token& Processor::get_token() const {
