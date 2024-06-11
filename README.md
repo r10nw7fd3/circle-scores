@@ -23,7 +23,6 @@ make
 {
 	"osu_id": (osu api id),
 	"osu_key": "(osu api key)",
-	"osu_legacy_key": "(osu api v1 key, optional)",
 	"discord_hook_url": "(discord hook url, optional)"
 }
 ```
