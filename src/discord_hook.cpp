@@ -2,7 +2,7 @@
 #include "log.hpp"
 
 DiscordHook::DiscordHook(const std::string& url)
-	: url_(url), post_(url) {
+	: url_(url), post_(url, "") {
 }
 
 long long DiscordHook::post(const std::string& data, const std::string& cover_url) {
@@ -12,39 +12,26 @@ long long DiscordHook::post(const std::string& data, const std::string& cover_ur
 	if(ret < 0 || ret / 100 != 2)
 		std::cout << LOGE"Failed to download cover, ret = " << ret << std::endl;
 
-	curl_mime* form = curl_mime_init(post_.get_curl());
-	curl_mimepart* field = nullptr;
-
 	std::string payload = "{ \"content\": \"";
 	payload += data;
 	payload += "\"";
 	if(!cover_data.empty()) {
 		payload += ", \"attachments\": [";
 		payload += "{ \"id\": 0 }";
-		field = curl_mime_addpart(form);
-		curl_mime_name(field, "files[0]");
-		curl_mime_data(field, &cover_data[0], cover_data.size());
-		curl_mime_filename(field, "cover.jpg");
-		curl_mime_type(field, "image/jpeg");
 		payload += "]";
+		post_.add_mimepart("files[0]", cover_data, "cover.jpg", "image/jpeg");
 	}
 	payload += "}";
-
 	std::cout << LOGI"Resulting payload: " << payload << std::endl;
 
-	field = curl_mime_addpart(form);
-	curl_mime_name(field, "payload_json");
-	curl_mime_data(field, &payload[0], CURL_ZERO_TERMINATED);
-	curl_mime_type(field, "application/json");
-
-	curl_easy_setopt(post_.get_curl(), CURLOPT_POSTFIELDS, "");
-	curl_easy_setopt(post_.get_curl(), CURLOPT_MIMEPOST, form);
+	post_.add_mimepart("payload_json", payload, "", "application_json");
 
 	std::string response;
 	ret = post_.perform(response);
 	std::cout << LOGI"Discord response: " << response << std::endl;
 	std::cout << LOGI"Discord response code: " << ret << std::endl;
-	curl_mime_free(form);
+
+	post_.clear_mime();
 
 	return ret;
 }
