@@ -42,6 +42,8 @@ void PostRequest::add_mimepart(const std::string& name, const std::string& data,
 }
 
 void PostRequest::clear_mime() {
-	if(mime_)
+	if(mime_) {
 		curl_mime_free(mime_);
+		mime_ = nullptr;
+	}
 }
