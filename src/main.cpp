@@ -23,8 +23,8 @@ int main(int argc, char** argv) {
 	StdoutScoreReceiver stdout_recvr;
 	prc.register_receiver(stdout_recvr);
 
+	DiscordScoreReceiver hook(creds.get_discord_hook_url());
 	if(!creds.get_discord_hook_url().empty()) {
-		DiscordScoreReceiver hook(creds.get_discord_hook_url());
 		prc.register_receiver(hook);
 	}
 
