@@ -44,19 +44,3 @@ int Credentials::read() {
 
 	return 0;
 }
-
-const std::string& Credentials::get_filename() const {
-	return filename_;
-}
-
-const std::string& Credentials::get_osu_id() const {
-	return osu_id_;
-}
-
-const std::string& Credentials::get_osu_key() const {
-	return osu_key_;
-}
-
-const std::string& Credentials::get_discord_hook_url() const {
-	return discord_hook_url_;
-}

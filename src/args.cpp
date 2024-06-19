@@ -67,27 +67,3 @@ void Args::parse(int argc, char** argv) {
 		}
 	}
 }
-
-int Args::get_delay() const {
-	return delay_;
-}
-
-int Args::get_page() const {
-	return page_;
-}
-
-const std::string& Args::get_creds_filename() const {
-	return creds_filename_;
-}
-
-int Args::get_lower_pp_bound() const {
-	return lower_pp_bound_;
-}
-
-int Args::get_catch_sig() const {
-	return catch_sig_;
-}
-
-const std::string& Args::get_token_filename() const {
-	return token_filename_;
-}

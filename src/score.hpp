@@ -28,21 +28,21 @@ public:
 
 	std::string format(bool for_discord = false) const;
 
-	int get_error() const;
-	const std::string& get_country() const;
-	const std::string& get_player() const;
-	const std::string& get_artist() const;
-	const std::string& get_song() const;
-	const std::string& get_diff() const;
-	double get_acc() const;
-	const std::string& get_mods() const;
-	int get_misses() const;
-	int get_sb() const;
-	int get_pp() const;
-	unsigned long long get_score_id() const;
-	unsigned long long get_mapset_id() const;
-	const std::string& get_map_md5() const;
-	time_t get_time() const;
+	int get_error() const { return error_; }
+	const std::string& get_country() const { return country_; }
+	const std::string& get_player() const { return player_; }
+	const std::string& get_artist() const { return artist_; }
+	const std::string& get_song() const { return song_; }
+	const std::string& get_diff() const { return diff_; }
+	double get_acc() const { return acc_; }
+	const std::string& get_mods() const { return mods_; }
+	int get_misses() const { return misses_; }
+	int get_sb() const { return sb_; }
+	int get_pp() const { return pp_; }
+	unsigned long long get_score_id() const { return score_id_; }
+	unsigned long long get_mapset_id() const { return mapset_id_; }
+	const std::string& get_map_md5() const { return map_md5_; }
+	time_t get_time() const { return time_; }
 
 	std::string get_score_url() const;
 	std::string get_cover_url() const;

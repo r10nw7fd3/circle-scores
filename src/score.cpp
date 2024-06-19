@@ -106,66 +106,6 @@ std::string Score::format(bool for_discord) const {
 	return ret;
 }
 
-int Score::get_error() const {
-	return error_;
-}
-
-const std::string& Score::get_country() const {
-	return country_;
-}
-
-const std::string& Score::get_player() const {
-	return player_;
-}
-
-const std::string& Score::get_artist() const {
-	return artist_;
-}
-
-const std::string& Score::get_song() const {
-	return song_;
-}
-
-const std::string& Score::get_diff() const {
-	return diff_;
-}
-
-double Score::get_acc() const {
-	return acc_;
-}
-
-const std::string& Score::get_mods() const {
-	return mods_;
-}
-
-int Score::get_misses() const {
-	return misses_;
-}
-
-int Score::get_sb() const {
-	return sb_;
-}
-
-int Score::get_pp() const {
-	return pp_;
-}
-
-unsigned long long Score::get_score_id() const {
-	return score_id_;
-}
-
-unsigned long long Score::get_mapset_id() const {
-	return mapset_id_;
-}
-
-const std::string& Score::get_map_md5() const {
-	return map_md5_;
-}
-
-time_t Score::get_time() const {
-	return time_;
-}
-
 std::string Score::get_score_url() const {
 	return "https://osu.ppy.sh/scores/osu/" + std::to_string(score_id_);
 }

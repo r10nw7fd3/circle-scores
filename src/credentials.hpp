@@ -16,9 +16,9 @@ public:
 
 	int read();
 
-	const std::string& get_filename() const;
-	const std::string& get_osu_id() const;
-	const std::string& get_osu_key() const;
-	const std::string& get_discord_hook_url() const;
+	const std::string& get_filename() const { return filename_; }
+	const std::string& get_osu_id() const { return osu_id_; }
+	const std::string& get_osu_key() const { return osu_key_; }
+	const std::string& get_discord_hook_url() const { return discord_hook_url_; }
 };
 

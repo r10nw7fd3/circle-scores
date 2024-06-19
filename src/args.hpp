@@ -13,13 +13,14 @@ private:
 
 	static int read_int(char*);
 	static void check_next(const char*, int&, int);
+
 public:
-	int get_delay() const;
-	int get_page() const;
-	const std::string& get_creds_filename() const;
-	int get_lower_pp_bound() const;
-	int get_catch_sig() const;
-	const std::string& get_token_filename() const;
+	int get_delay() const { return delay_; }
+	int get_page() const { return page_; }
+	const std::string& get_creds_filename() const { return creds_filename_; }
+	int get_lower_pp_bound() const { return lower_pp_bound_; }
+	int get_catch_sig() const { return catch_sig_; }
+	const std::string& get_token_filename() const { return token_filename_; }
 
 	void parse(int, char**);
 };
