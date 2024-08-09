@@ -6,6 +6,7 @@
 #include "sig_handler.hpp"
 #include "discord_score_receiver.hpp"
 #include "stdout_score_receiver.hpp"
+#include "lams_score_receiver.hpp"
 
 int main(int argc, char** argv) {
 	Args args;
@@ -24,9 +25,12 @@ int main(int argc, char** argv) {
 	prc.register_receiver(stdout_recvr);
 
 	DiscordScoreReceiver hook(creds.get_discord_hook_url());
-	if(!creds.get_discord_hook_url().empty()) {
+	if(!creds.get_discord_hook_url().empty())
 		prc.register_receiver(hook);
-	}
+
+	LamsScoreReceiver lams_recvr(args.get_lams(), args.get_lams_dir());
+	if(!args.get_lams().empty())
+		prc.register_receiver(lams_recvr);
 
 	if(args.get_catch_sig())
 		register_handler([&prc] (int code) {

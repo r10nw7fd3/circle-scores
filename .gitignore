@@ -1,5 +1,6 @@
 circle-scores
 build
+score-images
 *.txt
 *.json
 *.sw?

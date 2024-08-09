@@ -47,6 +47,8 @@ Score::Score(const rapidjson::Value& json) {
 	const auto& map = json["beatmap"];
 	JSON_VALIDATE(map, "version", ONERR(9), String)
 	diff_ = map["version"].GetString();
+	JSON_VALIDATE(map, "id", ONERR(9), Uint64)
+	map_id_ = map["id"].GetUint64();
 	JSON_VALIDATE(map, "checksum", ONERR(10), String)
 	map_md5_ = map["checksum"].GetString();
 
@@ -61,11 +63,27 @@ Score::Score(const rapidjson::Value& json) {
 	}
 
 	JSON_VALIDATE(json, "statistics", ONERR(14), Object)
-	JSON_VALIDATE(json["statistics"], "count_miss", ONERR(15), Int)
-	misses_ = json["statistics"]["count_miss"].GetInt();
+	const auto& statistics = json["statistics"];
+	JSON_VALIDATE(statistics, "count_300", ONERR(15), Int)
+	count_300_ = statistics["count_300"].GetInt();
+	JSON_VALIDATE(statistics, "count_100", ONERR(15), Int)
+	count_100_ = statistics["count_100"].GetInt();
+	JSON_VALIDATE(statistics, "count_50", ONERR(15), Int)
+	count_50_ = statistics["count_50"].GetInt();
+	JSON_VALIDATE(statistics, "count_miss", ONERR(15), Int)
+	misses_ = statistics["count_miss"].GetInt();
+
+	JSON_VALIDATE(json, "max_combo", ONERR(15), Int)
+	max_combo_ = json["max_combo"].GetInt();
+
+	JSON_VALIDATE(json, "rank", ONERR(16), String)
+	grade_ = json["rank"].GetString();
 
 	JSON_VALIDATE(json, "pp", ONERR(16), Number)
 	pp_ = std::round(json["pp"].GetDouble());
+
+	JSON_VALIDATE(json, "score", ONERR(16), Uint64)
+	score_ = json["score"].GetUint64();
 
 	JSON_VALIDATE(json, "best_id", ONERR(17), Uint64)
 	score_id_ = json["best_id"].GetUint64();
