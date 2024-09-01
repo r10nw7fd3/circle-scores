@@ -16,19 +16,17 @@ long long Rankings::perform(std::vector<std::tuple<int, std::string>>& dest) {
 	rapidjson::Document doc;
 	doc.Parse(&json[0]);
 
-	if(doc.HasParseError())
+	try {
+		const auto& ranking = doc["ranking"];
+		for(const auto& e : ranking.GetArray()) {
+			const auto& id = e["user"]["id"];
+			const auto& name = e["user"]["username"];
+
+			dest.push_back(std::make_tuple(id.GetInt(), name.GetString()));
+		}
+	}
+	catch(std::exception& e) {
 		return -2;
-	JSON_VALIDATE(doc, "ranking", return -2;, Array)
-
-	const auto& ranking = doc["ranking"];
-	for(const auto& e : ranking.GetArray()) {
-		const auto& id = e["user"]["id"];
-		const auto& name = e["user"]["username"];
-
-		if(!id.IsInt() || !name.IsString())
-			return -2;
-
-		dest.push_back(std::make_tuple(id.GetInt(), name.GetString()));
 	}
 
 	return ret;

@@ -31,16 +31,18 @@ int Credentials::read() {
 	rapidjson::Document json;
 	json.Parse(&json_str[0]);
 
-	JSON_VALIDATE(json, "osu_id", { fnotpresent("osu_id"); return 1; }, Int)
-	osu_id_ = std::to_string(json["osu_id"].GetInt());
-	JSON_VALIDATE(json, "osu_key", { fnotpresent("osu_key"); return 1; }, String)
-	osu_key_ = json["osu_key"].GetString();
+	try { osu_id_ = std::to_string(json["osu_id"].GetInt()); } catch(std::exception& e) {
+		fnotpresent("osu_id");
+		return 1;
+	}
+	try { osu_key_ = json["osu_key"].GetString(); } catch(std::exception& e) {
+		fnotpresent("osu_key");
+		return 1;
+	}
 
-	JSON_VALIDATE_SUCCESS(json, "discord_hook_url", {
+	try { discord_hook_url_ = json["discord_hook_url"].GetString(); } catch(std::exception& e) {
 		fnotpresentbutnotnes("discord_hook_url");
-	}, {
-		discord_hook_url_ = json["discord_hook_url"].GetString();
-	}, String)
+	}
 
 	return 0;
 }

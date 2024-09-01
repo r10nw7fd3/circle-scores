@@ -28,15 +28,17 @@ void LamsScoreReceiver::on_score(const Score& score) {
 
 	rapidjson::Document json;
 	json.Parse(data.c_str());
+	std::string image_url;
 
-#define ONERR \
-	std::cout << LOGE << "Invalid json:" << std::endl; \
-	std::cout << data << std::endl;
-
-	JSON_VALIDATE(json, "image", ONERR, Object)
-	const auto& image_object = json["image"].GetObject();
-	JSON_VALIDATE(image_object, "url", ONERR, String)
-	std::string image_url = image_object["url"].GetString();
+	try {
+		const auto& image_object = json["image"].GetObject();
+		image_url = image_object["url"].GetString();
+	}
+	catch(std::exception& e) {
+		std::cout << LOGE << "Invalid json: " << std::endl; \
+		std::cout << data << std::endl;
+		return;
+	}
 
 	std::cout << LOGI << "Downloading image from " << image_url << std::endl;
 

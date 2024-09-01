@@ -31,13 +31,14 @@ int Token::generate() {
 
 	rapidjson::Document doc;
 	doc.Parse(&data[0]);
-	if(!doc.HasMember("access_token")) {
-		std::cout << LOGE TOKENGENFAILED"No access_token field" << std::endl;
-		std::cout << LOGI"Response: " << data << std::endl;
+	try {
+		token_ = doc["access_token"].GetString();
+		expire_ = time(nullptr) + doc["expires_in"].GetInt();
+	}
+	catch(std::exception& e) {
+		std::cout << LOGE TOKENGENFAILED "Invalid json" << std::endl;
 		return 1;
 	}
-	token_ = doc["access_token"].GetString();
-	expire_ = time(nullptr) + doc["expires_in"].GetInt();
 	std::cout << LOGI"New token: " << token_ << std::endl;
 
 	if(!token_filename_.empty()) {

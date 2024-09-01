@@ -23,76 +23,53 @@ static const std::unordered_map<std::string, uint32_t> modmap = {
 };
 
 Score::Score(const rapidjson::Value& json) {
-#define ONERR(code) \
-	error_ = code; \
-	return;
+	std::string iso8601;
+	try {
+		const auto& user = json["user"];
+		country_ = user["country_code"].GetString();
+		player_ = user["username"].GetString();
 
-	JSON_VALIDATE(json, "user", ONERR(1), Object)
-	const auto& user = json["user"];
-	JSON_VALIDATE(user, "country_code", ONERR(2), String)
-	country_ = user["country_code"].GetString();
-	JSON_VALIDATE(user, "username", ONERR(3), String)
-	player_ = user["username"].GetString();
+		const auto& mapset = json["beatmapset"];
+		artist_ = mapset["artist"].GetString();
+		song_ = mapset["title"].GetString();
+		mapset_id_ = mapset["id"].GetUint64();
 
-	JSON_VALIDATE(json, "beatmapset", ONERR(4), Object)
-	const auto& mapset = json["beatmapset"];
-	JSON_VALIDATE(mapset, "artist", ONERR(5), String)
-	artist_ = mapset["artist"].GetString();
-	JSON_VALIDATE(mapset, "title", ONERR(6), String)
-	song_ = mapset["title"].GetString();
-	JSON_VALIDATE(mapset, "id", ONERR(7), Uint64)
-	mapset_id_ = mapset["id"].GetUint64();
+		const auto& map = json["beatmap"];
+		diff_ = map["version"].GetString();
+		map_id_ = map["id"].GetUint64();
+		map_md5_ = map["checksum"].GetString();
 
-	JSON_VALIDATE(json, "beatmap", ONERR(8), Object)
-	const auto& map = json["beatmap"];
-	JSON_VALIDATE(map, "version", ONERR(9), String)
-	diff_ = map["version"].GetString();
-	JSON_VALIDATE(map, "id", ONERR(9), Uint64)
-	map_id_ = map["id"].GetUint64();
-	JSON_VALIDATE(map, "checksum", ONERR(10), String)
-	map_md5_ = map["checksum"].GetString();
-
-	JSON_VALIDATE(json, "accuracy", ONERR(11), Number)
-	acc_ = json["accuracy"].GetDouble() * 100.0f;
-	JSON_VALIDATE(json, "mods", ONERR(12), Array)
-	for(const auto& e : json["mods"].GetArray()) {
-		if(!e.IsString()) {
-			ONERR(13)
+		acc_ = json["accuracy"].GetDouble() * 100.0f;
+		for(const auto& e : json["mods"].GetArray()) {
+			mods_ += e.GetString();
 		}
-		mods_ += e.GetString();
+
+		const auto& statistics = json["statistics"];
+		count_300_ = statistics["count_300"].GetInt();
+		count_100_ = statistics["count_100"].GetInt();
+		count_50_ = statistics["count_50"].GetInt();
+		misses_ = statistics["count_miss"].GetInt();
+
+		max_combo_ = json["max_combo"].GetInt();
+
+		grade_ = json["rank"].GetString();
+
+		pp_ = std::round(json["pp"].GetDouble());
+
+		score_ = json["score"].GetUint64();
+
+		score_id_ = json["best_id"].GetUint64();
+
+		iso8601 = json["created_at"].GetString();
 	}
-
-	JSON_VALIDATE(json, "statistics", ONERR(14), Object)
-	const auto& statistics = json["statistics"];
-	JSON_VALIDATE(statistics, "count_300", ONERR(15), Int)
-	count_300_ = statistics["count_300"].GetInt();
-	JSON_VALIDATE(statistics, "count_100", ONERR(15), Int)
-	count_100_ = statistics["count_100"].GetInt();
-	JSON_VALIDATE(statistics, "count_50", ONERR(15), Int)
-	count_50_ = statistics["count_50"].GetInt();
-	JSON_VALIDATE(statistics, "count_miss", ONERR(15), Int)
-	misses_ = statistics["count_miss"].GetInt();
-
-	JSON_VALIDATE(json, "max_combo", ONERR(15), Int)
-	max_combo_ = json["max_combo"].GetInt();
-
-	JSON_VALIDATE(json, "rank", ONERR(16), String)
-	grade_ = json["rank"].GetString();
-
-	JSON_VALIDATE(json, "pp", ONERR(16), Number)
-	pp_ = std::round(json["pp"].GetDouble());
-
-	JSON_VALIDATE(json, "score", ONERR(16), Uint64)
-	score_ = json["score"].GetUint64();
-
-	JSON_VALIDATE(json, "best_id", ONERR(17), Uint64)
-	score_id_ = json["best_id"].GetUint64();
-
-	JSON_VALIDATE(json, "created_at", ONERR(18), String)
-	std::string iso8601 = json["created_at"].GetString();
+	catch(std::exception& e) {
+		error_ = 1;
+		return;
+	}
 	time_t time = parse_iso8601(&iso8601[0]);
 	if(!time) {
-		ONERR(19)
+		error_ = 1;
+		return;
 	}
 	time_ = time;
 
