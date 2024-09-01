@@ -22,10 +22,10 @@ const std::string& Token::get_token() {
 }
 
 int Token::generate() {
-	std::cout << LOGI"Generating new osu! token" << std::endl;
+	LOGI << "Generating new osu! token" << std::endl;
 	std::string data;
 	if(req_.perform(data) == -1) {
-		std::cout << LOGE TOKENGENFAILED << req_.last_err() << std::endl;
+		LOGE << TOKENGENFAILED << req_.last_err() << std::endl;
 		return 1;
 	}
 
@@ -36,10 +36,10 @@ int Token::generate() {
 		expire_ = time(nullptr) + doc["expires_in"].GetInt();
 	}
 	catch(std::exception& e) {
-		std::cout << LOGE TOKENGENFAILED "Invalid json" << std::endl;
+		LOGE << TOKENGENFAILED "Invalid json" << std::endl;
 		return 1;
 	}
-	std::cout << LOGI"New token: " << token_ << std::endl;
+	LOGI << "New token: " << token_ << std::endl;
 
 	if(!token_filename_.empty()) {
 		std::ofstream ofs(token_filename_);
@@ -53,7 +53,7 @@ int Token::revoke() const {
 	if(token_.empty())
 		return 0;
 
-	std::cout << LOGI"Revoking token, ret = ";
+	LOGI << "Revoking token, ret = ";
 	std::flush(std::cout);
 	BaseRequest req(OSUAPI_PREFIX"oauth/tokens/current");
 	curl_easy_setopt(req.get_curl(), CURLOPT_CUSTOMREQUEST, "DELETE");

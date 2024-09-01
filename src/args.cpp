@@ -11,7 +11,7 @@ int Args::read_int(char* str) {
 		res = std::stoi(str);
 	}
 	catch(const std::exception& e) {
-		std::cout << LOGE << e.what() << std::endl;
+		LOGE << e.what() << std::endl;
 		std::exit(1);
 	}
 	return res;

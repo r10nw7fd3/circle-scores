@@ -5,11 +5,11 @@
 #include "json.hpp"
 
 void Credentials::fnotpresent(const std::string& name) {
-	std::cout << LOGE"Field " << name << " does not exist" << std::endl;
+	LOGE << "Field " << name << " does not exist" << std::endl;
 }
 
 void Credentials::fnotpresentbutnotnes(const std::string& name) {
-	std::cout << LOGW"Field " << name << " does not exist, but is not necessary" << std::endl;
+	LOGW << "Field " << name << " does not exist, but is not necessary" << std::endl;
 }
 
 Credentials::Credentials(const std::string& filename)
@@ -20,7 +20,7 @@ int Credentials::read() {
 	std::ifstream ifs;
 	ifs.open(filename_);
 	if((ifs.rdstate() & std::ifstream::failbit)) {
-		std::cout << LOGE"Failed to open " << filename_ << std::endl;
+		LOGE << "Failed to open " << filename_ << std::endl;
 		return 1;
 	}
 	std::stringstream sstream;

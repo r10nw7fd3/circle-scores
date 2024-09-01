@@ -41,22 +41,22 @@ void Processor::query() {
 	long long ret;
 
 	unsigned long long start = get_unix_ms();
-	std::cout << LOGI"Pulling rankings" << std::endl;
+	LOGI << "Pulling rankings" << std::endl;
 	Rankings rankings(tkn, args_.get_page());
 	std::vector<std::tuple<int, std::string>> lb;
 	ret = rankings.perform(lb);
 	if(ret < 0 || ret / 100 != 2) {
-		std::cout << LOGE"Failed to pull rankings, ret = " << ret << std::endl;
+		LOGE << "Failed to pull rankings, ret = " << ret << std::endl;
 		return;
 	}
 
 	for(const auto& p : lb) {
-		std::cout << LOGI"Pulling scores for " << std::get<1>(p) << std::endl;
+		LOGI << "Pulling scores for " << std::get<1>(p) << std::endl;
 		RecentScores rs(tkn, std::get<0>(p));
 		std::vector<Score> scores;
 		ret = rs.perform(scores);
 		if(ret < 0 || ret / 100 != 2) {
-			std::cout << LOGE"Failed to pull scores, ret = " << ret << std::endl;
+			LOGE << "Failed to pull scores, ret = " << ret << std::endl;
 			continue;
 		}
 
@@ -73,7 +73,7 @@ void Processor::query() {
 		}
 		set_last_update(std::get<0>(p));;
 	}
-	std::cout << LOGI"Done. Took " << get_unix_ms() - start << "ms" << std::endl;
+	LOGI << "Done. Took " << get_unix_ms() - start << "ms" << std::endl;
 }
 
 int Processor::run() {

@@ -20,9 +20,9 @@ void LamsScoreReceiver::on_score(const Score& score) {
 	std::string data;
 	long ret = post_.perform(data);
 	if(ret < 0 || ret / 100 != 2) {
-		std::cout << LOGE << "Request failed, ret = " << ret << ", postdata = " << std::endl;
+		LOGE << "Request failed, ret = " << ret << ", postdata = " << std::endl;
 		std::cout << postdata << std::endl;
-		std::cout << LOGE << "Response: " << data << std::endl;
+		LOGE << "Response: " << data << std::endl;
 		return;
 	}
 
@@ -35,25 +35,25 @@ void LamsScoreReceiver::on_score(const Score& score) {
 		image_url = image_object["url"].GetString();
 	}
 	catch(std::exception& e) {
-		std::cout << LOGE << "Invalid json: " << std::endl; \
+		LOGE << "Invalid json: " << std::endl; \
 		std::cout << data << std::endl;
 		return;
 	}
 
-	std::cout << LOGI << "Downloading image from " << image_url << std::endl;
+	LOGI << "Downloading image from " << image_url << std::endl;
 
 	get_.set_endpoint(image_url);
 	std::string image_data;
 	ret = get_.perform(image_data);
 	if(ret < 0 || ret / 100 != 2) {
-		std::cout << LOGE << "Failed to download image, ret = " << ret << std::endl;
+		LOGE << "Failed to download image, ret = " << ret << std::endl;
 		return;
 	}
 
 	std::ofstream ofs(dir_ + "/" + std::to_string(score.get_score_id()) + ".png");
 	ofs.write(image_data.c_str(), image_data.size());
 	if(!ofs)
-		std::cout << LOGE << "Open/Write failed" << std::endl;
+		LOGE << "Open/Write failed" << std::endl;
 }
 
 std::string LamsScoreReceiver::make_postdata(const Score& score) {
@@ -101,6 +101,6 @@ std::string LamsScoreReceiver::make_postdata(const Score& score) {
 void LamsScoreReceiver::try_create_dir() {
 #if defined(__unix__) || defined(__unix)
 	if(mkdir(dir_.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) < 0 && errno != EEXIST)
-		std::cout << LOGE << "Failed to create dir " << dir_ << std::endl;
+		LOGE << "Failed to create dir " << dir_ << std::endl;
 #endif
 }

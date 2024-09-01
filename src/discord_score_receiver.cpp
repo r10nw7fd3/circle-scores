@@ -12,7 +12,7 @@ void DiscordScoreReceiver::on_score(const Score& score) {
 	std::string cover_data;
 	long long ret = get_.perform(cover_data);
 	if(ret < 0 || ret / 100 != 2)
-		std::cout << LOGE"Failed to download cover, ret = " << ret << std::endl;
+		LOGE << "Failed to download cover, ret = " << ret << std::endl;
 
 	std::string payload = "{ \"content\": \"";
 	payload += text;
@@ -24,14 +24,14 @@ void DiscordScoreReceiver::on_score(const Score& score) {
 		post_.add_mimepart("files[0]", cover_data, "cover.jpg", "image/jpeg");
 	}
 	payload += "}";
-	std::cout << LOGI"Resulting payload: " << payload << std::endl;
+	LOGI << "Resulting payload: " << payload << std::endl;
 
 	post_.add_mimepart("payload_json", payload, "", "application_json");
 
 	std::string response;
 	ret = post_.perform(response);
-	std::cout << LOGI"Discord response: " << response << std::endl;
-	std::cout << LOGI"Discord response code: " << ret << std::endl;
+	LOGI << "Discord response: " << response << std::endl;
+	LOGI << "Discord response code: " << ret << std::endl;
 
 	post_.clear_mime();
 }

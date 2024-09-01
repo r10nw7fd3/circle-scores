@@ -37,7 +37,7 @@ int register_handler(const std::function<void(int)>& callback) {
 #elif defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
 	return !SetConsoleCtrlHandler(handler, TRUE);
 #else
-	std::cout << LOGE"Unknown platform" << std::endl;
+	LOGE << "Unknown platform" << std::endl;
 	return 1;
 #endif
 }

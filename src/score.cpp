@@ -119,7 +119,7 @@ int Score::encode_mods(int& dest) const {
 			dest |= modmap.at(sub);
 		}
 		catch(std::exception& e) {
-			std::cout << LOGE << e.what();
+			LOGE << e.what();
 			return 1;
 		}
 		if(!sub.compare("NC"))
