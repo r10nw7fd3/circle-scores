@@ -15,6 +15,7 @@ private:
 
 	static int read_int(char*);
 	static void check_next(const char*, int&, int);
+	static void print_help_and_exit(const char*);
 
 public:
 	int get_delay() const { return delay_; }

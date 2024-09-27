@@ -2,7 +2,34 @@ OUT := circle-scores
 CXXFLAGS := -Wall -Wextra -std=c++11 -O2
 LIBS := -lcurl
 
-SRC := $(wildcard src/*.cpp)
+include config.mk
+
+SRC := \
+	src/args.cpp \
+	src/base_request.cpp \
+	src/credentials.cpp \
+	src/log.cpp \
+	src/main.cpp \
+	src/post_request.cpp \
+	src/processor.cpp \
+	src/rankings.cpp \
+	src/recent_scores.cpp \
+	src/score.cpp \
+	src/sig_handler.cpp \
+	src/stdout_score_receiver.cpp \
+	src/time.cpp \
+	src/token.cpp \
+	src/uleb128.cpp
+
+ifneq ($(ENABLE_DISCORD_HOOK),0)
+SRC += src/discord_score_receiver.cpp
+CXXFLAGS += -DENABLE_DISCORD_HOOK
+endif
+ifneq ($(ENABLE_LAMS),0)
+SRC += src/lams_score_receiver.cpp
+CXXFLAGS += -DENABLE_LAMS
+endif
+
 OBJ := $(subst src/,build/,$(SRC:.cpp=.o))
 
 _ := $(if $(filter clean,$(MAKECMDGOALS)), \
@@ -14,7 +41,7 @@ all: $(OUT)
 $(OUT): $(OBJ)
 	$(CXX) -o $(OUT) $(OBJ) $(LIBS)
 
-$(OBJ): | build
+$(OBJ): config.mk | build
 
 build:
 	mkdir $@
