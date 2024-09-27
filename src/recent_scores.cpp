@@ -31,7 +31,7 @@ long long RecentScores::perform(std::vector<Score>& dest) {
 		dest.emplace_back(e);
 		if(dest.back().get_error()) {
 			LOGE << "Failed to construct score. Full response dump: " << std::endl;
-			std::cout << json << std::endl;
+			std::cerr << json << std::endl;
 			LOGE << "Score error code: " << dest.back().get_error() << std::endl;
 		}
 	}

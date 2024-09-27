@@ -21,7 +21,7 @@ void LamsScoreReceiver::on_score(const Score& score) {
 	long ret = post_.perform(data);
 	if(ret < 0 || ret / 100 != 2) {
 		LOGE << "Request failed, ret = " << ret << ", postdata = " << std::endl;
-		std::cout << postdata << std::endl;
+		std::cerr << postdata << std::endl;
 		LOGE << "Response: " << data << std::endl;
 		return;
 	}
@@ -36,7 +36,7 @@ void LamsScoreReceiver::on_score(const Score& score) {
 	}
 	catch(std::exception& e) {
 		LOGE << "Invalid json: " << std::endl; \
-		std::cout << data << std::endl;
+		std::cerr << data << std::endl;
 		return;
 	}
 

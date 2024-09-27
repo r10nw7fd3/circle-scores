@@ -54,12 +54,12 @@ int Token::revoke() const {
 		return 0;
 
 	LOGI << "Revoking token, ret = ";
-	std::flush(std::cout);
+	std::flush(std::cerr);
 	BaseRequest req(OSUAPI_PREFIX"oauth/tokens/current");
 	curl_easy_setopt(req.get_curl(), CURLOPT_CUSTOMREQUEST, "DELETE");
 	req.add_header("Authorization: Bearer " + token_);
 	std::string _;
 	long long ret = req.perform(_);
-	std::cout << ret << std::endl;
+	std::cerr << ret << std::endl;
 	return (ret < 0 || ret / 100 != 2);
 }
