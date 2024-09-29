@@ -12,12 +12,12 @@ Install the following dependencies:
 Run
 
 ```
-make
+make -j$(nproc)
 ```
 
 ## Running
 
-`credentials.json` format:
+Create `credentials.json`:
 
 ```
 {
@@ -27,10 +27,18 @@ make
 }
 ```
 
+Copy `config.json.default` to `config.json` and modify it according to your needs
+
 Run
+
+```
+./circle-scores
+```
+
+to start the thing or run
 
 ```
 ./circle-scores -h
 ```
 
-To see available arguments
+to see available arguments
