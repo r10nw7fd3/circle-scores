@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <cmath>
 #include <sstream>
+#include <algorithm>
 #include "log.hpp"
 #include "rankings.hpp"
 #include "recent_scores.hpp"
@@ -51,6 +52,10 @@ void Processor::query() {
 	}
 
 	for(const auto& p : lb) {
+		auto& exclude = args_.get_exclude();
+		if(std::find(exclude.begin(), exclude.end(), std::get<0>(p)) != exclude.end())
+			continue;
+
 		LOGI << "Pulling scores for " << std::get<1>(p) << std::endl;
 		RecentScores rs(tkn, std::get<0>(p));
 		std::vector<Score> scores;

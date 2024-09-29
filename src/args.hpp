@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 class Args {
 private:
@@ -12,8 +13,9 @@ private:
 	std::string token_filename_;
 	std::string lams_;
 	std::string lams_dir_ = "score-images";
+	std::vector<int> exclude_;
 
-	static int read_int(char*);
+	static int read_int(const char*);
 	static void check_next(const char*, int&, int);
 	static void print_help_and_exit(const char*);
 
@@ -26,6 +28,7 @@ public:
 	const std::string& get_token_filename() const { return token_filename_; }
 	const std::string& get_lams() const { return lams_; }
 	const std::string& get_lams_dir() const { return lams_dir_; }
+	const std::vector<int>& get_exclude() const { return exclude_; }
 
 	void parse(int, char**);
 };

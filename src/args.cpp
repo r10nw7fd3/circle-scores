@@ -1,17 +1,18 @@
 #include "args.hpp"
 
+#include <sstream>
 #include <cstring>
 #include <cstdlib>
 #include <stdexcept>
 #include "log.hpp"
 
-int Args::read_int(char* str) {
+int Args::read_int(const char* str) {
 	int res = -1;
 	try {
 		res = std::stoi(str);
 	}
 	catch(const std::exception& e) {
-		LOGE << e.what() << std::endl;
+		std::cerr << "Invalid argument value" << std::endl;
 		std::exit(1);
 	}
 	return res;
@@ -25,18 +26,19 @@ void Args::check_next(const char* arg, int& i, int argc) {
 }
 
 void Args::print_help_and_exit(const char* program) {
-	std::cerr << "Usage: " << program << " [args]" << std::endl << std::endl;
-	std::cerr << "Args:" << std::endl;
-	std::cerr << "-h              Display help message" << std::endl;
-	std::cerr << "-d <delay>      Delay in seconds between scans. Default = 300" << std::endl;
-	std::cerr << "-p <page>       Leaderboard page to scan. Default = 0" << std::endl;
-	std::cerr << "-c <fname>      Credentials filename. Default = credentials.json" << std::endl;
-	std::cerr << "-pp <pp>        Lower PP bound. Default = 800" << std::endl;
-	std::cerr << "-no-sig         Do not catch Ctrl+C/SIGINT/SIGTERM to revoke token" << std::endl;
-	std::cerr << "-tf <fname>     Save token to a file" << std::endl;
+	std::cerr << "Usage: " << program << " [args]\n\n";
+	std::cerr << "Args:\n";
+	std::cerr << "-h                Display help message\n";
+	std::cerr << "-d <delay>        Delay in seconds between scans. Default = 300\n";
+	std::cerr << "-p <page>         Leaderboard page to scan. Default = 0\n";
+	std::cerr << "-c <fname>        Credentials filename. Default = credentials.json\n";
+	std::cerr << "-pp <pp>          Lower PP bound. Default = 800\n";
+	std::cerr << "-no-sig           Do not catch Ctrl+C/SIGINT/SIGTERM to revoke token\n";
+	std::cerr << "-tf <fname>       Save token to a file\n";
+	std::cerr << "-ex <id1,id2,...> Exclude ids from being scanned\n";
 #ifdef ENABLE_LAMS
-	std::cerr << "-lams <addr>    Address of the Look At My Score!-compatible service to download score images from" << std::endl;
-	std::cerr << "-lams-dir <dir> Save score images into <dir>. Default = score-images" << std::endl;
+	std::cerr << "-lams <addr>      Address of the Look At My Score!-compatible service to download score images from\n";
+	std::cerr << "-lams-dir <dir>   Save score images into <dir>. Default = score-images\n";
 #endif
 
 	std::cerr << "\nBuild config: ";
@@ -84,6 +86,17 @@ void Args::parse(int argc, char** argv) {
 		else if(!std::strcmp(argv[i], "-tf")) {
 			check_next("-tf", i, argc);
 			token_filename_ = argv[i];
+		}
+		else if(!std::strcmp(argv[i], "-ex")) {
+			check_next("-ex", i, argc);
+			std::stringstream ss(argv[i]);
+			while(ss) {
+				std::string id;
+				std::getline(ss, id, ',');
+				if(id.empty())
+					continue;
+				exclude_.push_back(read_int(id.c_str()));
+			}
 		}
 #ifdef ENABLE_LAMS
 		else if(!std::strcmp(argv[i], "-lams")) {
