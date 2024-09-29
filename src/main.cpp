@@ -1,6 +1,7 @@
 #include <iostream>
-#include <cstdlib>
+#include <memory>
 #include "args.hpp"
+#include "config.hpp"
 #include "credentials.hpp"
 #include "processor.hpp"
 #include "sig_handler.hpp"
@@ -15,6 +16,13 @@
 int main(int argc, char** argv) {
 	Args args;
 	args.parse(argc, argv);
+	
+	Config config(args.get_config_filename());
+	if(!config.is_valid()) {
+		std::cerr << "Failed to read config" << std::endl;
+		return 1;
+	}
+
 	Credentials creds(args.get_creds_filename());
 	if(creds.read()) {
 		std::cerr << "Failed to read credentials file" << std::endl;
@@ -23,24 +31,28 @@ int main(int argc, char** argv) {
 
 	curl_global_init(CURL_GLOBAL_ALL);
 
-	Processor prc(args, creds);
+	Processor prc(config, creds);
 
 	StdoutScoreReceiver stdout_recvr;
 	prc.register_receiver(stdout_recvr);
 
 #ifdef ENABLE_DISCORD_HOOK
-	DiscordScoreReceiver hook(creds.get_discord_hook_url());
-	if(!creds.get_discord_hook_url().empty())
-		prc.register_receiver(hook);
+	std::unique_ptr<DiscordScoreReceiver> discord_recvr;
+	if(config.get_discord_hook_enabled()) {
+		discord_recvr.reset(new DiscordScoreReceiver(creds.get_discord_hook_url()));
+		prc.register_receiver(*discord_recvr);
+	}
 #endif
 
 #ifdef ENABLE_LAMS
-	LamsScoreReceiver lams_recvr(args.get_lams(), args.get_lams_dir());
-	if(!args.get_lams().empty())
-		prc.register_receiver(lams_recvr);
+	std::unique_ptr<LamsScoreReceiver> lams_recvr;
+	if(config.get_lams_enabled()) {
+		lams_recvr.reset(new LamsScoreReceiver(config.get_lams_address(), config.get_lams_dir()));
+		prc.register_receiver(*lams_recvr);
+	}
 #endif
 
-	if(args.get_catch_sig())
+	if(config.get_catch_sigint())
 		register_handler([&prc] (int code) {
 			(void) code;
 			prc.get_token().revoke();

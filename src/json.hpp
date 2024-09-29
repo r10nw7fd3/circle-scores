@@ -9,3 +9,4 @@ public:
 
 #define RAPIDJSON_ASSERT(expr) if(!(expr)) throw JsonException(#expr);
 #include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>

@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <vector>
 #include <ctime>
-#include "args.hpp"
+#include "config.hpp"
 #include "credentials.hpp"
 #include "token.hpp"
 #include "score.hpp"
@@ -11,7 +11,7 @@
 
 class Processor {
 private:
-	const Args& args_;
+	const Config& config_;
 	const Credentials& creds_;
 	Token token_;
 	std::unordered_map<int, time_t> last_update_;
@@ -24,7 +24,7 @@ private:
 	void handle_score(const Score& score);
 	void query();
 public:
-	Processor(const Args&, const Credentials&);
+	Processor(const Config&, const Credentials&);
 
 	int run();
 	void register_receiver(ScoreReceiver& recvr);

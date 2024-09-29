@@ -1,0 +1,13 @@
+{
+	"interval": 300,
+	"page": 0,
+	"lower_pp_bound": 800,
+	"catch_sigint": true,
+	"save_token_to_file": false,
+	"token_filename": "/tmp/osu-token.txt",
+	"excluded_ids": [],
+	"discord_hook_enabled": true,
+	"lams_enabled": false,
+	"lams_address": "https://example.com",
+	"lams_dir": "score-images"
+}

@@ -9,9 +9,9 @@
 #include "rankings.hpp"
 #include "recent_scores.hpp"
 
-Processor::Processor(const Args& args, const Credentials& creds)
-	: args_(args), creds_(creds),
-	token_(creds.get_osu_id(), creds.get_osu_key(), args.get_token_filename()) {
+Processor::Processor(const Config& config, const Credentials& creds)
+	: config_(config), creds_(creds),
+	token_(creds.get_osu_id(), creds.get_osu_key(), config.get_token_filename()) {
 }
 
 time_t Processor::get_last_update(int id) {
@@ -43,7 +43,7 @@ void Processor::query() {
 
 	unsigned long long start = get_unix_ms();
 	LOGI << "Pulling rankings" << std::endl;
-	Rankings rankings(tkn, args_.get_page());
+	Rankings rankings(tkn, config_.get_page());
 	std::vector<std::tuple<int, std::string>> lb;
 	ret = rankings.perform(lb);
 	if(ret < 0 || ret / 100 != 2) {
@@ -52,7 +52,7 @@ void Processor::query() {
 	}
 
 	for(const auto& p : lb) {
-		auto& exclude = args_.get_exclude();
+		auto& exclude = config_.get_excluded_ids();
 		if(std::find(exclude.begin(), exclude.end(), std::get<0>(p)) != exclude.end())
 			continue;
 
@@ -71,7 +71,7 @@ void Processor::query() {
 			if(s.get_error())
 				continue;
 
-			if(s.get_time() < get_last_update(std::get<0>(p)) || s.get_pp() < args_.get_lower_pp_bound())
+			if(s.get_time() < get_last_update(std::get<0>(p)) || s.get_pp() < config_.get_lower_pp_bound())
 				continue;
 
 			handle_score(s);
@@ -84,7 +84,7 @@ void Processor::query() {
 int Processor::run() {
 	for(;;) {
 		query();
-		std::this_thread::sleep_for(std::chrono::seconds(args_.get_delay()));
+		std::this_thread::sleep_for(std::chrono::seconds(config_.get_interval()));
 	}
 	return 0;
 }

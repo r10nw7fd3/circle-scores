@@ -7,6 +7,7 @@ include config.mk
 SRC := \
 	src/args.cpp \
 	src/base_request.cpp \
+	src/config.cpp \
 	src/credentials.cpp \
 	src/log.cpp \
 	src/main.cpp \
