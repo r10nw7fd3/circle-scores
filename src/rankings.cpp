@@ -3,7 +3,7 @@
 #include "json.hpp"
 
 Rankings::Rankings(const std::string& token, int page)
-	: GetRequest(OSUAPI_PREFIX"rankings/osu/performance?cursor[page]=" + page) {
+	: GetRequest(OSUAPI_PREFIX"rankings/osu/performance?cursor[page]=" + std::to_string(page)) {
 	GetRequest::add_header(OSUAUTH_PREFIX + token);
 }
 
