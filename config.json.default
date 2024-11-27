@@ -7,6 +7,8 @@
 	"token_filename": "/tmp/osu-token.txt",
 	"excluded_ids": [],
 	"discord_hook_enabled": true,
+	"telegram_bot_enabled": false,
+	"telegram_bot_channel": "@example",
 	"lams_enabled": false,
 	"lams_address": "https://example.com",
 	"lams_dir": "score-images"

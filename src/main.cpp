@@ -9,6 +9,9 @@
 #ifdef ENABLE_DISCORD_HOOK
 #include "discord_score_receiver.hpp"
 #endif
+#ifdef ENABLE_TELEGRAM_BOT
+#include "telegram_score_receiver.hpp"
+#endif
 #ifdef ENABLE_LAMS
 #include "lams_score_receiver.hpp"
 #endif
@@ -41,6 +44,15 @@ int main(int argc, char** argv) {
 	if(config.get_discord_hook_enabled()) {
 		discord_recvr.reset(new DiscordScoreReceiver(creds.get_discord_hook_url()));
 		prc.register_receiver(*discord_recvr);
+	}
+#endif
+
+#ifdef ENABLE_TELEGRAM_BOT
+	std::unique_ptr<TelegramScoreReceiver> tg_recvr;
+	if(config.get_telegram_bot_enabled()) {
+		tg_recvr.reset(new TelegramScoreReceiver(creds.get_telegram_bot_token(),
+			config.get_telegram_bot_channel()));
+		prc.register_receiver(*tg_recvr);
 	}
 #endif
 

@@ -23,7 +23,8 @@ Create `credentials.json`:
 {
 	"osu_id": (osu api id),
 	"osu_key": "(osu api key)",
-	"discord_hook_url": "(discord hook url, optional)"
+	"discord_hook_url": "(discord hook url, optional)",
+	"telegram_bot_token": "(telegram bot token, optional)"
 }
 ```
 

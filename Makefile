@@ -26,6 +26,10 @@ ifneq ($(ENABLE_DISCORD_HOOK),0)
 SRC += src/discord_score_receiver.cpp
 CXXFLAGS += -DENABLE_DISCORD_HOOK
 endif
+ifneq ($(ENABLE_TELEGRAM_BOT),0)
+SRC += src/telegram_score_receiver.cpp
+CXXFLAGS += -DENABLE_TELEGRAM_BOT
+endif
 ifneq ($(ENABLE_LAMS),0)
 SRC += src/lams_score_receiver.cpp
 CXXFLAGS += -DENABLE_LAMS
