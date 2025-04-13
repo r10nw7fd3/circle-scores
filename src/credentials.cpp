@@ -40,17 +40,13 @@ int Credentials::read() {
 		return 1;
 	}
 
-#ifdef ENABLE_DISCORD_HOOK
 	try { discord_hook_url_ = json["discord_hook_url"].GetString(); } catch(std::exception& e) {
 		fnotpresentbutnotnes("discord_hook_url");
 	}
-#endif
 
-#ifdef ENABLE_TELEGRAM_BOT
 	try { telegram_bot_token_ = json["telegram_bot_token"].GetString(); } catch(std::exception& e) {
 		fnotpresentbutnotnes("telegram_bot_token");
 	}
-#endif
 
 	return 0;
 }

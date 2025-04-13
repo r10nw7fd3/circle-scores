@@ -28,20 +28,14 @@ Config::Config(const std::string& filename) {
 			excluded_ids_.push_back(id.GetInt());
 		}
 
-#ifdef ENABLE_DISCORD_HOOK
 		discord_hook_enabled_ = doc["discord_hook_enabled"].GetBool();
-#endif
 
-#ifdef ENABLE_TELEGRAM_BOT
 		telegram_bot_enabled_ = doc["telegram_bot_enabled"].GetBool();
 		telegram_bot_channel_ = doc["telegram_bot_channel"].GetString();
-#endif
 
-#ifdef ENABLE_LAMS
 		lams_enabled_ = doc["lams_enabled"].GetBool();
 		lams_dir_ = doc["lams_address"].GetString();
 		lams_dir_ = doc["lams_dir"].GetString();
-#endif
 
 	}
 	catch(std::exception& e) {

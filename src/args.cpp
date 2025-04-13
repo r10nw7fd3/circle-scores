@@ -17,22 +17,6 @@ void Args::print_help_and_exit(const char* program) {
 	std::cerr << "-h                Display help message\n";
 	std::cerr << "-conf <fname>     Config filename. Default = config.json\n";
 	std::cerr << "-creds <fname>    Credentials filename. Default = credentials.json\n";
-
-	std::cerr << "\nBuild config: ";
-	std::cerr << "ENABLE_DISCORD_HOOK := " <<
-#ifdef ENABLE_DISCORD_HOOK
-	"1 ";
-#else
-	"0 ";
-#endif
-	std::cerr << "ENABLE_LAMS := " <<
-#ifdef ENABLE_LAMS
-	"1 ";
-#else
-	"0 ";
-#endif
-
-	std::cerr << std::endl;
 	std::exit(0);
 }
 

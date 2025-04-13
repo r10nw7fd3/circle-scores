@@ -6,15 +6,9 @@
 #include "processor.hpp"
 #include "sig_handler.hpp"
 #include "stdout_score_receiver.hpp"
-#ifdef ENABLE_DISCORD_HOOK
 #include "discord_score_receiver.hpp"
-#endif
-#ifdef ENABLE_TELEGRAM_BOT
 #include "telegram_score_receiver.hpp"
-#endif
-#ifdef ENABLE_LAMS
 #include "lams_score_receiver.hpp"
-#endif
 
 int main(int argc, char** argv) {
 	Args args;
@@ -39,30 +33,24 @@ int main(int argc, char** argv) {
 	StdoutScoreReceiver stdout_recvr;
 	prc.register_receiver(stdout_recvr);
 
-#ifdef ENABLE_DISCORD_HOOK
 	std::unique_ptr<DiscordScoreReceiver> discord_recvr;
 	if(config.get_discord_hook_enabled()) {
 		discord_recvr.reset(new DiscordScoreReceiver(creds.get_discord_hook_url()));
 		prc.register_receiver(*discord_recvr);
 	}
-#endif
 
-#ifdef ENABLE_TELEGRAM_BOT
 	std::unique_ptr<TelegramScoreReceiver> tg_recvr;
 	if(config.get_telegram_bot_enabled()) {
 		tg_recvr.reset(new TelegramScoreReceiver(creds.get_telegram_bot_token(),
 			config.get_telegram_bot_channel()));
 		prc.register_receiver(*tg_recvr);
 	}
-#endif
 
-#ifdef ENABLE_LAMS
 	std::unique_ptr<LamsScoreReceiver> lams_recvr;
 	if(config.get_lams_enabled()) {
 		lams_recvr.reset(new LamsScoreReceiver(config.get_lams_address(), config.get_lams_dir()));
 		prc.register_receiver(*lams_recvr);
 	}
-#endif
 
 	if(config.get_catch_sigint())
 		register_handler([&prc] (int code) {
