@@ -75,6 +75,16 @@ Score::Score(const rapidjson::Value& json) {
 
 }
 
+static inline void escape(std::string& str) {
+	for(size_t start = 0; (start = str.find("_", start))
+			!= std::string::npos; start += 2)
+		str.replace(start, 1, "\\_");
+	for(size_t start = 0; (start = str.find("*", start))
+			!= std::string::npos; start += 2)
+		str.replace(start, 1, "\\*");
+}
+
+// TODO: Discord-specific stuff should be handled somewhere else
 std::string Score::format(bool for_discord) const {
 	std::string country;
 	if(for_discord) {
@@ -98,6 +108,10 @@ std::string Score::format(bool for_discord) const {
 	ret += std::to_string(pp_);
 	ret += "pp ";
 	ret += get_score_url();
+
+	if(for_discord)
+		escape(ret);
+
 	return ret;
 }
 
